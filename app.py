@@ -4,6 +4,7 @@ from models import db, Speise, Bestellung
 
 # Absoluter Pfad zur Datenbank (lokal, wie in der Arbeit gefordert)
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+os.makedirs(os.path.join(BASE_DIR, "database"), exist_ok=True)
 DB_PATH = os.path.join(BASE_DIR, "database/restaurant.db")
 
 # Flask-Anwendung konfigurieren
@@ -26,9 +27,14 @@ def speisekarte():
 # Verarbeitung der Bestellung (POST aus Formular)
 @app.route('/bestellen', methods=['POST'])
 def bestellen():
-    speisen_ids = request.form.getlist('speisen')  # Liste ausgewählter IDs
-    tisch_nr = request.form.get('tisch', 1)         # Standard-Tisch: 1
-    speisen_csv = ','.join(speisen_ids)             # Als String gespeichert
+    speisen_ids = []
+    for key, value in request.form.items():
+        if key.startswith("speise_") and value.isdigit() and int(value) > 0:
+            speisen_id = key.split("_")[1]
+            speisen_ids.extend([speisen_id] * int(value))
+
+    tisch_nr = request.form.get('tisch', 1)
+    speisen_csv = ','.join(speisen_ids)
 
     neue_bestellung = Bestellung(tisch_nr=tisch_nr, speisen=speisen_csv)
     db.session.add(neue_bestellung)
