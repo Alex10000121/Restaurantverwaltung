@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Speisekarte</title>
+</head>
+<body>
+    <h1>Speisekarte</h1>
+    <form method="POST" action="{{ url_for('bestellen') }}">
+        {% for speise in speisen %}
+            <label>
+                <input type="checkbox" name="speisen" value="{{ speise.id }}">
+                {{ speise.name }} – {{ "%.2f"|format(speise.preis) }} CHF
+            </label><br>
+        {% endfor %}
+        <input type="hidden" name="tisch" value="1">
+        <button type="submit">Bestellen</button>
+    </form>
+</body>
+</html>
