@@ -4,18 +4,65 @@
     <meta charset="UTF-8">
     <title>Speisekarte</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+        function berechneSumme() {
+            let summe = 0;
+            const inputs = document.querySelectorAll("input[data-preis]");
+
+            inputs.forEach(input => {
+                const menge = parseInt(input.value) || 0;
+                const preis = parseFloat(input.dataset.preis);
+                summe += menge * preis;
+            });
+
+            document.getElementById("endbetrag").textContent = summe.toFixed(2) + " CHF";
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const felder = document.querySelectorAll("input[type='number']");
+            felder.forEach(f => f.addEventListener("input", berechneSumme));
+            berechneSumme();
+        });
+    </script>
 </head>
 <body>
     <h1>Speisekarte</h1>
+
     <form method="POST" action="{{ url_for('bestellen') }}">
-        {% for speise in speisen %}
-            <div class="speise">
-                <label for="speise_{{ speise.id }}">
-                    {{ speise.name }} – {{ "%.2f"|format(speise.preis) }} CHF
-                </label>
-                <input type="number" id="speise_{{ speise.id }}" name="speise_{{ speise.id }}" min="0" value="0">
-            </div>
-        {% endfor %}
+        <h2>Speisen</h2>
+        <table>
+            <tr><th>Gericht</th><th>Preis</th><th>Menge</th></tr>
+            {% for speise in speisen %}
+            <tr>
+                <td>{{ speise.name }}</td>
+                <td>{{ "%.2f"|format(speise.preis) }} CHF</td>
+                <td>
+                    <input type="number" id="speise_{{ speise.id }}"
+                           name="speise_{{ speise.id }}" min="0" value="0"
+                           data-preis="{{ "%.2f"|format(speise.preis)|replace(",", ".") }}">
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Getränke</h2>
+        <table>
+            <tr><th>Getränk</th><th>Preis</th><th>Menge</th></tr>
+            {% for getraenk in getraenke %}
+            <tr>
+                <td>{{ getraenk.name }}</td>
+                <td>{{ "%.2f"|format(getraenk.preis) }} CHF</td>
+                <td>
+                    <input type="number" id="getraenk_{{ getraenk.id }}"
+                           name="getraenk_{{ getraenk.id }}" min="0" value="0"
+                           data-preis="{{ "%.2f"|format(getraenk.preis)|replace(",", ".") }}">
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <p><strong>Endbetrag: <span id="endbetrag">0.00 CHF</span></strong></p>
+
         <input type="hidden" name="tisch" value="1">
         <button type="submit">Jetzt bestellen</button>
     </form>

@@ -1,32 +1,31 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-# Initialisierung des SQLAlchemy-Objekts (wird in app.py eingebunden)
+# Datenbank-Objekt initialisieren
 db = SQLAlchemy()
 
-# ──────────────────────────────────────────────
-# Modell: Speise (Eintrag in der digitalen Speisekarte)
-# ──────────────────────────────────────────────
+# ─────────────────────────────
+# Modell: Speise (Essen/Getränk)
+# ─────────────────────────────
 class Speise(db.Model):
     __tablename__ = 'speisen'
-
-    id = db.Column(db.Integer, primary_key=True)      # Eindeutige ID
-    name = db.Column(db.String(100), nullable=False)  # Name des Gerichts
-    preis = db.Column(db.Float, nullable=False)       # Preis in CHF
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    preis = db.Column(db.Float, nullable=False)
+    kategorie = db.Column(db.String(20), nullable=False)  # z. B. 'Essen' oder 'Getränk'
 
     def __repr__(self):
-        return f"<Speise {self.name}>"
+        return f"<Speise {self.name} ({self.kategorie})>"
 
-# ──────────────────────────────────────────────
-# Modell: Bestellung (Eintrag bei abgeschickter Bestellung)
-# ──────────────────────────────────────────────
+# ─────────────────────────────
+# Modell: Bestellung
+# ─────────────────────────────
 class Bestellung(db.Model):
     __tablename__ = 'bestellungen'
-
-    id = db.Column(db.Integer, primary_key=True)        # Eindeutige ID
-    tisch_nr = db.Column(db.Integer, nullable=False)    # Tischnummer
-    speisen = db.Column(db.String(255), nullable=False) # CSV-Liste z. B. "1,3,3"
-    zeitpunkt = db.Column(db.DateTime, default=datetime.now)  # Zeitstempel
+    id = db.Column(db.Integer, primary_key=True)
+    tisch_nr = db.Column(db.Integer, nullable=False)
+    speisen = db.Column(db.String(255), nullable=False)  # CSV-Liste der Speisen/Getränke
+    zeitpunkt = db.Column(db.DateTime, default=datetime.now)
 
     def __repr__(self):
         return f"<Bestellung Tisch {self.tisch_nr} – {self.speisen}>"

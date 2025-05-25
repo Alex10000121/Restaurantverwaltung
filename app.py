@@ -21,26 +21,35 @@ def index():
 # Anzeige der Speisekarte mit Formular für Bestellung
 @app.route('/speisekarte')
 def speisekarte():
-    speisen = Speise.query.all()
-    endbetrag = sum(s.preis for s in speisen)
-    return render_template('speisekarte.html', speisen=speisen, endbetrag=endbetrag)
+    speisen = Speise.query.filter_by(kategorie="Essen").all()
+    getraenke = Speise.query.filter_by(kategorie="Getränk").all()
+    return render_template('speisekarte.html', speisen=speisen, getraenke=getraenke)
+
 
 # Verarbeitung der Bestellung (POST aus Formular)
 @app.route('/bestellen', methods=['POST'])
+@app.route('/bestellen', methods=['POST'])
 def bestellen():
-    speisen_ids = []
+    bestell_ids = []
+
+    # Alle Formularfelder durchgehen
     for key, value in request.form.items():
-        if key.startswith("speise_") and value.isdigit() and int(value) > 0:
-            speisen_id = key.split("_")[1]
-            speisen_ids.extend([speisen_id] * int(value))
+        if value.isdigit() and int(value) > 0:
+            menge = int(value)
+
+            # z. B. speise_3 oder getraenk_7
+            if key.startswith("speise_") or key.startswith("getraenk_"):
+                artikel_id = key.split("_")[1]
+                bestell_ids.extend([artikel_id] * menge)
 
     tisch_nr = request.form.get('tisch', 1)
-    speisen_csv = ','.join(speisen_ids)
+    speisen_csv = ','.join(bestell_ids)
 
     neue_bestellung = Bestellung(tisch_nr=tisch_nr, speisen=speisen_csv)
     db.session.add(neue_bestellung)
     db.session.commit()
     return redirect(url_for('danke'))
+
 
 # Bestätigungsseite nach erfolgreicher Bestellung
 @app.route('/danke')
@@ -76,9 +85,17 @@ if __name__ == '__main__':
         # Nur beim ersten Start: Beispieldaten in Speisekarte einfügen
         if not Speise.query.first():
             db.session.add_all([
-                Speise(name="Pizza Margherita", preis=12.50),
-                Speise(name="Spaghetti Carbonara", preis=14.00),
-                Speise(name="Gemischter Salat", preis=8.50)
+                Speise(name="Pizza Margherita", preis=12.50, kategorie="Essen"),
+                Speise(name="Spaghetti Carbonara", preis=14.00, kategorie="Essen"),
+                Speise(name="Gemischter Salat", preis=8.50, kategorie="Essen"),
+                Speise(name="Lasagne Bolognese", preis=15.00, kategorie="Essen"),
+                Speise(name="Ravioli mit Ricotta", preis=13.00, kategorie="Essen"),
+                Speise(name="Panna Cotta", preis=6.50, kategorie="Essen"),
+                Speise(name="Mineralwasser 0.5L", preis=3.00, kategorie="Getränk"),
+                Speise(name="Cola 0.5L", preis=3.50, kategorie="Getränk"),
+                Speise(name="Apfelschorle 0.5L", preis=3.50, kategorie="Getränk"),
+                Speise(name="Espresso", preis=2.50, kategorie="Getränk"),
+                Speise(name="Cappuccino", preis=4.00, kategorie="Getränk")
             ])
             db.session.commit()
 
