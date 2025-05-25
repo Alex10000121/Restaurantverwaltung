@@ -28,31 +28,31 @@ def speisekarte():
 
 # Verarbeitung der Bestellung (POST aus Formular)
 @app.route('/bestellen', methods=['POST'])
-@app.route('/bestellen', methods=['POST'])
 def bestellen():
     bestell_ids = []
 
-    # Alle Formularfelder durchgehen
     for key, value in request.form.items():
         if value.isdigit() and int(value) > 0:
-            menge = int(value)
-
-            # z. B. speise_3 oder getraenk_7
             if key.startswith("speise_") or key.startswith("getraenk_"):
                 artikel_id = key.split("_")[1]
-                bestell_ids.extend([artikel_id] * menge)
+                bestell_ids.extend([artikel_id] * int(value))
+
+    if not bestell_ids:
+        # Kein Artikel ausgewählt
+        speisen = Speise.query.filter_by(kategorie="Essen").all()
+        getraenke = Speise.query.filter_by(kategorie="Getränk").all()
+        fehler = "Bitte wählen Sie mindestens ein Produkt aus."
+        return render_template('speisekarte.html', speisen=speisen, getraenke=getraenke, fehler=fehler)
 
     tisch_nr = request.form.get('tisch', 1)
-    speisen_csv = ','.join(bestell_ids)
-
-    neue_bestellung = Bestellung(tisch_nr=tisch_nr, speisen=speisen_csv)
+    neue_bestellung = Bestellung(tisch_nr=tisch_nr, speisen=",".join(bestell_ids))
     db.session.add(neue_bestellung)
     db.session.commit()
     return redirect(url_for('danke'))
 
 
+
 # Bestätigungsseite nach erfolgreicher Bestellung
-@app.route('/danke')
 @app.route('/danke')
 def danke():
     bestellung = Bestellung.query.order_by(Bestellung.id.desc()).first()

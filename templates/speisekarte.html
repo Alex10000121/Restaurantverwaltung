@@ -8,13 +8,11 @@
         function berechneSumme() {
             let summe = 0;
             const inputs = document.querySelectorAll("input[data-preis]");
-
             inputs.forEach(input => {
                 const menge = parseInt(input.value) || 0;
                 const preis = parseFloat(input.dataset.preis);
                 summe += menge * preis;
             });
-
             document.getElementById("endbetrag").textContent = summe.toFixed(2) + " CHF";
         }
 
@@ -26,45 +24,62 @@
     </script>
 </head>
 <body>
-    <h1>Speisekarte</h1>
+<main>
+    {% if fehler %}
+        <div class="fehler">{{ fehler }}</div>
+    {% endif %}
 
     <form method="POST" action="{{ url_for('bestellen') }}">
-        <h2>Speisen</h2>
-        <table>
-            <tr><th>Gericht</th><th>Preis</th><th>Menge</th></tr>
-            {% for speise in speisen %}
-            <tr>
-                <td>{{ speise.name }}</td>
-                <td>{{ "%.2f"|format(speise.preis) }} CHF</td>
-                <td>
-                    <input type="number" id="speise_{{ speise.id }}"
-                           name="speise_{{ speise.id }}" min="0" value="0"
-                           data-preis="{{ "%.2f"|format(speise.preis)|replace(",", ".") }}">
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
+        <div class="section">
+            <h1>Speisekarte</h1>
+        </div>
 
-        <h2>Getränke</h2>
-        <table>
-            <tr><th>Getränk</th><th>Preis</th><th>Menge</th></tr>
-            {% for getraenk in getraenke %}
-            <tr>
-                <td>{{ getraenk.name }}</td>
-                <td>{{ "%.2f"|format(getraenk.preis) }} CHF</td>
-                <td>
-                    <input type="number" id="getraenk_{{ getraenk.id }}"
-                           name="getraenk_{{ getraenk.id }}" min="0" value="0"
-                           data-preis="{{ "%.2f"|format(getraenk.preis)|replace(",", ".") }}">
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
+        <div class="section">
+            <h2>Speisen</h2>
+            <table>
+                <tr><th>Gericht</th><th>Preis</th><th>Menge</th></tr>
+                {% for speise in speisen %}
+                <tr>
+                    <td>{{ speise.name }}</td>
+                    <td>{{ "%.2f"|format(speise.preis) }} CHF</td>
+                    <td>
+                        <input type="number" id="speise_{{ speise.id }}" name="speise_{{ speise.id }}" min="0" value="0"
+                               data-preis="{{ "%.2f"|format(speise.preis)|replace(",", ".") }}">
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
 
-        <p><strong>Endbetrag: <span id="endbetrag">0.00 CHF</span></strong></p>
+        <div class="section">
+            <h2>Getränke</h2>
+            <table>
+                <tr><th>Getränk</th><th>Preis</th><th>Menge</th></tr>
+                {% for getraenk in getraenke %}
+                <tr>
+                    <td>{{ getraenk.name }}</td>
+                    <td>{{ "%.2f"|format(getraenk.preis) }} CHF</td>
+                    <td>
+                        <input type="number" id="getraenk_{{ getraenk.id }}" name="getraenk_{{ getraenk.id }}" min="0" value="0"
+                               data-preis="{{ "%.2f"|format(getraenk.preis)|replace(",", ".") }}">
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
 
-        <input type="hidden" name="tisch" value="1">
-        <button type="submit">Jetzt bestellen</button>
+        <div class="section">
+            <div class="betrag-box">
+                <span class="betrag-label">Endbetrag:</span>
+                <span id="endbetrag">0.00 CHF</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <input type="hidden" name="tisch" value="1">
+            <button type="submit">Jetzt bestellen</button>
+        </div>
     </form>
+</main>
 </body>
 </html>
