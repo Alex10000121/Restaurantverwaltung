@@ -1,22 +1,65 @@
 body {
-    font-family: sans-serif;
-    max-width: 600px;
-    margin: auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2rem auto;
     padding: 2rem;
+    background-color: #f9f9f9;
+    color: #333;
 }
-h1 {
+
+h1, h2 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #ecf0f1;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+input[type="number"] {
+    width: 60px;
+    padding: 0.25rem;
     text-align: center;
 }
-.speise {
-    margin: 1rem 0;
-    display: flex;
-    justify-content: space-between;
-}
-input[type=number] {
-    width: 60px;
-}
+
 button {
-    margin-top: 2rem;
-    padding: 0.5rem 1rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
     font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 2rem auto;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+#endbetrag {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #27ae60;
+    text-align: center;
+    display: block;
+    margin-top: 1rem;
 }
