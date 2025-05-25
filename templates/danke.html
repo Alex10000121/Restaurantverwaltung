@@ -2,10 +2,22 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Bestellung erhalten</title>
+    <title>Bestellung abgeschlossen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <h1>Vielen Dank für Ihre Bestellung!</h1>
-    <a href="{{ url_for('speisekarte') }}">Zurück zur Speisekarte</a>
+
+    {% if bestellung and speisen %}
+        <h2>Zusammenfassung</h2>
+        <ul>
+            {% for eintrag in speisen %}
+                <li>{{ eintrag['menge'] }}× {{ eintrag['name'] }} – {{ "%.2f"|format(eintrag['preis']) }} CHF</li>
+            {% endfor %}
+        </ul>
+        <p><strong>Gesamtbetrag:</strong> {{ "%.2f"|format(summe) }} CHF</p>
+    {% endif %}
+
+    <a href="{{ url_for('speisekarte') }}">Neue Bestellung aufgeben</a>
 </body>
 </html>

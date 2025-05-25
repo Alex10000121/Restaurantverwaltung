@@ -22,7 +22,8 @@ def index():
 @app.route('/speisekarte')
 def speisekarte():
     speisen = Speise.query.all()
-    return render_template('speisekarte.html', speisen=speisen)
+    endbetrag = sum(s.preis for s in speisen)
+    return render_template('speisekarte.html', speisen=speisen, endbetrag=endbetrag)
 
 # Verarbeitung der Bestellung (POST aus Formular)
 @app.route('/bestellen', methods=['POST'])
@@ -44,7 +45,27 @@ def bestellen():
 # Bestätigungsseite nach erfolgreicher Bestellung
 @app.route('/danke')
 def danke():
-    return render_template('danke.html')
+    bestellung = Bestellung.query.order_by(Bestellung.id.desc()).first()
+    speisen_ids = bestellung.speisen.split(',') if bestellung else []
+
+    speisen_liste = []
+    summe = 0.0
+    if speisen_ids:
+        from collections import Counter
+        zähler = Counter(speisen_ids)
+        for speise_id, menge in zähler.items():
+            speise = Speise.query.get(int(speise_id))
+            if speise:
+                gesamt = speise.preis * menge
+                summe += gesamt
+                speisen_liste.append({
+                    'name': speise.name,
+                    'preis': speise.preis,
+                    'menge': menge
+                })
+
+    return render_template('danke.html', bestellung=bestellung, speisen=speisen_liste, summe=summe)
+
 
 # Initialisierung & Start des Servers
 if __name__ == '__main__':
