@@ -53,27 +53,37 @@ def bestellen():
 
 # Bestätigungsseite nach erfolgreicher Bestellung
 @app.route('/danke')
+@app.route('/danke')
 def danke():
     bestellung = Bestellung.query.order_by(Bestellung.id.desc()).first()
     speisen_ids = bestellung.speisen.split(',') if bestellung else []
 
-    speisen_liste = []
-    summe = 0.0
-    if speisen_ids:
-        from collections import Counter
-        zähler = Counter(speisen_ids)
-        for speise_id, menge in zähler.items():
-            speise = Speise.query.get(int(speise_id))
-            if speise:
-                gesamt = speise.preis * menge
-                summe += gesamt
-                speisen_liste.append({
-                    'name': speise.name,
-                    'preis': speise.preis,
-                    'menge': menge
-                })
+    from collections import Counter
+    zähler = Counter(speisen_ids)
 
-    return render_template('danke.html', bestellung=bestellung, speisen=speisen_liste, summe=summe)
+    speisen_liste = []
+    getraenke_liste = []
+    summe = 0.0
+
+    for id_str, menge in zähler.items():
+        speise = Speise.query.get(int(id_str))
+        if speise:
+            gesamt = speise.preis * menge
+            summe += gesamt
+            eintrag = {
+                'name': speise.name,
+                'preis': speise.preis,
+                'menge': menge
+            }
+            if speise.kategorie == "Essen":
+                speisen_liste.append(eintrag)
+            elif speise.kategorie == "Getränk":
+                getraenke_liste.append(eintrag)
+
+    return render_template('danke.html',
+                           speisen=speisen_liste,
+                           getraenke=getraenke_liste,
+                           summe=summe)
 
 
 # Initialisierung & Start des Servers

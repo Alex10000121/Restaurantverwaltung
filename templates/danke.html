@@ -8,16 +8,42 @@
 <body>
     <h1>Vielen Dank für Ihre Bestellung!</h1>
 
-    {% if bestellung and speisen %}
-        <h2>Zusammenfassung</h2>
-        <ul>
-            {% for eintrag in speisen %}
-                <li>{{ eintrag['menge'] }}× {{ eintrag['name'] }} – {{ "%.2f"|format(eintrag['preis']) }} CHF</li>
-            {% endfor %}
-        </ul>
-        <p><strong>Gesamtbetrag:</strong> {{ "%.2f"|format(summe) }} CHF</p>
+    {% if speisen %}
+    <h2>Bestellte Speisen</h2>
+    <table>
+        <tr><th>Gericht</th><th>Menge</th><th>Einzelpreis</th><th>Gesamt</th></tr>
+        {% for item in speisen %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.menge }}</td>
+            <td>{{ "%.2f"|format(item.preis) }} CHF</td>
+            <td>{{ "%.2f"|format(item.preis * item.menge) }} CHF</td>
+        </tr>
+        {% endfor %}
+    </table>
     {% endif %}
 
-    <a href="{{ url_for('speisekarte') }}">Neue Bestellung aufgeben</a>
+    {% if getraenke %}
+    <h2>Bestellte Getränke</h2>
+    <table>
+        <tr><th>Getränk</th><th>Menge</th><th>Einzelpreis</th><th>Gesamt</th></tr>
+        {% for item in getraenke %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.menge }}</td>
+            <td>{{ "%.2f"|format(item.preis) }} CHF</td>
+            <td>{{ "%.2f"|format(item.preis * item.menge) }} CHF</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    <p><strong>Gesamtsumme: <span id="endbetrag">{{ "%.2f"|format(summe) }} CHF</span></strong></p>
+
+    <div style="text-align: center;">
+        <a href="{{ url_for('speisekarte') }}">
+            <button>Neue Bestellung aufgeben</button>
+        </a>
+    </div>
 </body>
 </html>
