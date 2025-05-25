@@ -1,3 +1,4 @@
+/* Grundlayout */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
@@ -11,8 +12,7 @@ body {
     color: #333;
 }
 
-/* Hauptcontainer */
-main {
+main, .danke-page {
     background-color: #f2f2f2;
     max-width: 900px;
     margin: 3rem auto;
@@ -21,13 +21,11 @@ main {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Abschnittsabstand */
 .section {
     padding: 1.5rem 0;
     border-bottom: 1px solid #ddd;
 }
 
-/* Überschriften */
 h1, h2 {
     text-align: center;
     color: #2c3e50;
@@ -35,42 +33,107 @@ h1, h2 {
     padding-bottom: 1rem;
 }
 
-/* Tabelle */
-table {
+/* Bestelltabellen */
+.bestell-tabelle {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
     background-color: #fff;
     border-radius: 8px;
     overflow: hidden;
+    table-layout: fixed;
 }
 
-th, td {
+.bestell-tabelle th, .bestell-tabelle td {
     padding: 0.75rem;
-    text-align: left;
     border-bottom: 1px solid #ddd;
+    word-wrap: break-word;
 }
 
-th {
+.bestell-tabelle th {
     background-color: #ecf0f1;
     font-weight: bold;
+    text-align: center;
 }
 
-tr:nth-child(even) {
+.bestell-tabelle tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-/* Eingabefelder */
-input[type="number"] {
-    width: 60px;
-    padding: 0.4rem;
-    text-align: center;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.bestell-tabelle th.gericht, .bestell-tabelle td.gericht {
+    width: 45%;
+    text-align: left;
 }
 
-/* Button */
+.bestell-tabelle th.preis, .bestell-tabelle td.preis {
+    width: 25%;
+    text-align: center;
+}
+
+.bestell-tabelle th.menge, .bestell-tabelle td.menge {
+    width: 30%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Tabellen auf Danke-Seite (4 Spalten) */
+th.gericht, td.gericht {
+    width: 40%;
+    text-align: left;
+}
+
+th.menge, td.menge {
+    width: 15%;
+    text-align: center;
+}
+
+th.preis, td.preis,
+th.gesamt, td.gesamt {
+    width: 22.5%;
+    text-align: center;
+}
+
+/* Mengensteuerung */
+.counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.counter input[type="number"] {
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    font-size: 1.2rem;
+    border: none;              /* <== Entfernt den Rahmen */
+    outline: none;             /* <== Entfernt blauen Rahmen beim Klicken */
+    background-color: transparent; /* optional – wenn du keinen Hintergrund willst */
+}
+
+
+.counter button {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background-color 0.3s;
+}
+
+.counter button:hover {
+    background-color: #2980b9;
+}
+
+/* Buttons */
 button {
     background-color: #3498db;
     color: white;
@@ -88,7 +151,7 @@ button:hover {
     background-color: #2980b9;
 }
 
-/* Endbetrag-Box */
+/* Endbetrag */
 .betrag-box {
     background-color: #ffffff;
     border-radius: 8px;
@@ -118,4 +181,3 @@ button:hover {
     border-radius: 6px;
     margin-bottom: 2rem;
 }
-

@@ -5,6 +5,20 @@
     <title>Speisekarte</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script>
+        function plus(btn) {
+            const input = btn.parentElement.querySelector('input');
+            input.value = parseInt(input.value) + 1;
+            input.dispatchEvent(new Event('input'));
+        }
+
+        function minus(btn) {
+            const input = btn.parentElement.querySelector('input');
+            if (parseInt(input.value) > 0) {
+                input.value = parseInt(input.value) - 1;
+                input.dispatchEvent(new Event('input'));
+            }
+        }
+
         function berechneSumme() {
             let summe = 0;
             const inputs = document.querySelectorAll("input[data-preis]");
@@ -17,7 +31,7 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            const felder = document.querySelectorAll("input[type='number']");
+            const felder = document.querySelectorAll("input[data-preis]");
             felder.forEach(f => f.addEventListener("input", berechneSumme));
             berechneSumme();
         });
@@ -25,8 +39,9 @@
 </head>
 <body>
 <main>
+
     {% if fehler %}
-        <div class="fehler">{{ fehler }}</div>
+    <div class="fehler">{{ fehler }}</div>
     {% endif %}
 
     <form method="POST" action="{{ url_for('bestellen') }}">
@@ -36,35 +51,59 @@
 
         <div class="section">
             <h2>Speisen</h2>
-            <table>
-                <tr><th>Gericht</th><th>Preis</th><th>Menge</th></tr>
-                {% for speise in speisen %}
-                <tr>
-                    <td>{{ speise.name }}</td>
-                    <td>{{ "%.2f"|format(speise.preis) }} CHF</td>
-                    <td>
-                        <input type="number" id="speise_{{ speise.id }}" name="speise_{{ speise.id }}" min="0" value="0"
-                               data-preis="{{ "%.2f"|format(speise.preis)|replace(",", ".") }}">
-                    </td>
-                </tr>
-                {% endfor %}
+            <table class="bestell-tabelle">
+                <thead>
+                    <tr>
+                        <th class="gericht">Gericht</th>
+                        <th class="preis">Preis</th>
+                        <th class="menge">Menge</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for speise in speisen %}
+                    <tr>
+                        <td class="gericht">{{ speise.name }}</td>
+                        <td class="preis">{{ "%.2f"|format(speise.preis) }} CHF</td>
+                        <td class="menge">
+                            <div class="counter">
+                                <button type="button" onclick="minus(this)">−</button>
+                                <input type="number" id="speise_{{ speise.id }}" name="speise_{{ speise.id }}" value="0" min="0"
+                                       data-preis="{{ "%.2f"|format(speise.preis)|replace(',', '.') }}" readonly>
+                                <button type="button" onclick="plus(this)">+</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
             </table>
         </div>
 
         <div class="section">
             <h2>Getränke</h2>
-            <table>
-                <tr><th>Getränk</th><th>Preis</th><th>Menge</th></tr>
-                {% for getraenk in getraenke %}
-                <tr>
-                    <td>{{ getraenk.name }}</td>
-                    <td>{{ "%.2f"|format(getraenk.preis) }} CHF</td>
-                    <td>
-                        <input type="number" id="getraenk_{{ getraenk.id }}" name="getraenk_{{ getraenk.id }}" min="0" value="0"
-                               data-preis="{{ "%.2f"|format(getraenk.preis)|replace(",", ".") }}">
-                    </td>
-                </tr>
-                {% endfor %}
+            <table class="bestell-tabelle">
+                <thead>
+                    <tr>
+                        <th class="gericht">Getränk</th>
+                        <th class="preis">Preis</th>
+                        <th class="menge">Menge</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for getraenk in getraenke %}
+                    <tr>
+                        <td class="gericht">{{ getraenk.name }}</td>
+                        <td class="preis">{{ "%.2f"|format(getraenk.preis) }} CHF</td>
+                        <td class="menge">
+                            <div class="counter">
+                                <button type="button" onclick="minus(this)">−</button>
+                                <input type="number" id="getraenk_{{ getraenk.id }}" name="getraenk_{{ getraenk.id }}" value="0" min="0"
+                                       data-preis="{{ "%.2f"|format(getraenk.preis)|replace(',', '.') }}" readonly>
+                                <button type="button" onclick="plus(this)">+</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
             </table>
         </div>
 
