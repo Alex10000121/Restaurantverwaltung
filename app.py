@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for
 from models import db, Speise, Bestellung
 
-# Absoluter Pfad zur Datenbank (lokal, wie in der Arbeit gefordert)
+# Absoluter Pfad zur Datenbank
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 os.makedirs(os.path.join(BASE_DIR, "database"), exist_ok=True)
 DB_PATH = os.path.join(BASE_DIR, "database/restaurant.db")
