@@ -26,7 +26,7 @@ def speisekarte():
     return render_template('speisekarte.html', speisen=speisen, getraenke=getraenke)
 
 
-# Verarbeitung der Bestellung (POST aus Formular)
+# Verarbeitung der Bestellung
 @app.route('/bestellen', methods=['POST'])
 def bestellen():
     bestell_ids = []
@@ -86,7 +86,7 @@ def danke():
                            summe=summe)
 
 
-# Initialisierung & Start des Servers
+# Initialisierung und Start des Servers
 if __name__ == '__main__':
     with app.app_context():
         # Datenbank erstellen (falls nicht vorhanden)

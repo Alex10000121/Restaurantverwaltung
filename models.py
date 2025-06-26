@@ -4,9 +4,7 @@ from datetime import datetime
 # Datenbank-Objekt initialisieren
 db = SQLAlchemy()
 
-# ─────────────────────────────
 # Modell: Speise (Essen/Getränk)
-# ─────────────────────────────
 class Speise(db.Model):
     __tablename__ = 'speisen'
     id = db.Column(db.Integer, primary_key=True)
@@ -17,9 +15,8 @@ class Speise(db.Model):
     def __repr__(self):
         return f"<Speise {self.name} ({self.kategorie})>"
 
-# ─────────────────────────────
+
 # Modell: Bestellung
-# ─────────────────────────────
 class Bestellung(db.Model):
     __tablename__ = 'bestellungen'
     id = db.Column(db.Integer, primary_key=True)
